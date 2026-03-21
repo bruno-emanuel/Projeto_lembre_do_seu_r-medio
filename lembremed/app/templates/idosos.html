@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Idosos</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>👵 Idosos cadastrados</h2>
+
+        <a href="/idosos/novo" class="btn">+ Novo Idoso</a>
+
+        <div class="table-section">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Idade</th>
+                        <th>Telefone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for idoso in idosos %}
+                    <tr>
+                        <td>{{ idoso.nome }}</td>
+                        <td>{{ idoso.idade }}</td>
+                        <td>{{ idoso.telefone }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
