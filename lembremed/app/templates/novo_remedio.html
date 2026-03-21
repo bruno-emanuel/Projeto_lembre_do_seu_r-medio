@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Novo Remédio</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="container topbar-content">
+            <h1 class="logo">LembreMed</h1>
+            <nav>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/idosos">Idosos</a>
+                <a href="/remedios">Remédios</a>
+                <a href="/logout">Sair</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="form-section">
+            <h2>➕ Cadastrar Remédio</h2>
+
+            <form method="post" class="form-grid">
+                <input type="text" name="nome" placeholder="Nome do remédio" required>
+                <input type="text" name="dose" placeholder="Ex: 1 comprimido" required>
+                <input type="time" name="horario" required>
+                <input type="text" name="frequencia" placeholder="Ex: diariamente" required>
+
+                <select name="idoso_id" required>
+                    <option value="">Selecione o idoso</option>
+                    {% for idoso in idosos %}
+                    <option value="{{ idoso.id }}">{{ idoso.nome }}</option>
+                    {% endfor %}
+                </select>
+
+                <textarea name="instrucoes" placeholder="Instruções adicionais"></textarea>
+
+                <button class="btn" type="submit">Salvar</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

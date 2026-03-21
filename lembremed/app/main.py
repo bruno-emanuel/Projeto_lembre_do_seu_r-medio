@@ -1,8 +1,8 @@
-from fastapi import FastAPI, Request, Form, Depends
-from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-from sqlalchemy.orm import Session
+from fastapi import FastAPI, Request, Form, Depends # pyright: ignore[reportMissingImports]
+from fastapi.responses import HTMLResponse, RedirectResponse # pyright: ignore[reportMissingImports]
+from fastapi.staticfiles import StaticFiles # pyright: ignore[reportMissingImports]
+from fastapi.templating import Jinja2Templates # pyright: ignore[reportMissingImports]
+from sqlalchemy.orm import Session # pyright: ignore[reportMissingImports]
 
 from .database import Base, engine, get_db
 from . import crud
@@ -126,3 +126,58 @@ def criar_idoso(
     crud.criar_idoso(db, dados, user_id)
 
     return RedirectResponse("/idosos", status_code=303)
+
+@app.get("/remedios", response_class=HTMLResponse)
+def remedios_page(request: Request, db: Session = Depends(get_db)):
+    user_id = get_current_user_id(request)
+    if not user_id:
+        return RedirectResponse("/login", status_code=303)
+
+    remedios = crud.listar_remedios(db, user_id)
+    idosos = crud.listar_idosos(db, user_id)
+
+    return templates.TemplateResponse(
+        "remedios.html",
+        {"request": request, "remedios": remedios, "idosos": idosos}
+    )
+
+
+@app.get("/remedios/novo", response_class=HTMLResponse)
+def novo_remedio_page(request: Request, db: Session = Depends(get_db)):
+    user_id = get_current_user_id(request)
+    if not user_id:
+        return RedirectResponse("/login", status_code=303)
+
+    idosos = crud.listar_idosos(db, user_id)
+    return templates.TemplateResponse(
+        "novo_remedio.html",
+        {"request": request, "idosos": idosos}
+    )
+
+
+@app.post("/remedios/novo")
+def criar_remedio(
+    request: Request,
+    nome: str = Form(...),
+    dose: str = Form(...),
+    horario: str = Form(...),
+    frequencia: str = Form(...),
+    instrucoes: str = Form(""),
+    idoso_id: int = Form(...),
+    db: Session = Depends(get_db)
+):
+    user_id = get_current_user_id(request)
+    if not user_id:
+        return RedirectResponse("/login", status_code=303)
+
+    dados = {
+        "nome": nome,
+        "dose": dose,
+        "horario": horario,
+        "frequencia": frequencia,
+        "instrucoes": instrucoes,
+        "idoso_id": idoso_id
+    }
+
+    crud.criar_remedio(db, dados)
+    return RedirectResponse("/remedios", status_code=303)    

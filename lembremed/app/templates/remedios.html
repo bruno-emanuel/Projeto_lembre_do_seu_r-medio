@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Remédios</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="container topbar-content">
+            <h1 class="logo">LembreMed</h1>
+            <nav>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/idosos">Idosos</a>
+                <a href="/remedios">Remédios</a>
+                <a href="/logout">Sair</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="page-header">
+            <h2>💊 Remédios cadastrados</h2>
+            <p>Gerencie os medicamentos dos idosos</p>
+        </section>
+
+        <p style="margin-bottom: 20px;">
+            <a href="/remedios/novo" class="btn">+ Novo Remédio</a>
+        </p>
+
+        <section class="table-section">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Dose</th>
+                        <th>Horário</th>
+                        <th>Frequência</th>
+                        <th>Idoso</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for remedio in remedios %}
+                    <tr>
+                        <td>{{ remedio.nome }}</td>
+                        <td>{{ remedio.dose }}</td>
+                        <td>{{ remedio.horario }}</td>
+                        <td>{{ remedio.frequencia }}</td>
+                        <td>{{ remedio.idoso.nome }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>
