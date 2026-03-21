@@ -88,3 +88,41 @@ def dashboard(request: Request, db: Session = Depends(get_db)):
             "historico": historico
         }
     )
+@app.get("/idosos", response_class=HTMLResponse)
+def idosos_page(request: Request, db: Session = Depends(get_db)):
+    user_id = get_current_user_id(request)
+    if not user_id:
+        return RedirectResponse("/login", status_code=303)
+
+    idosos = crud.listar_idosos(db, user_id)
+
+    return templates.TemplateResponse("idosos.html", {
+        "request": request,
+        "idosos": idosos
+    })
+
+
+@app.get("/idosos/novo", response_class=HTMLResponse)
+def novo_idoso_page(request: Request):
+    return templates.TemplateResponse("novo_idoso.html", {"request": request})
+
+
+@app.post("/idosos/novo")
+def criar_idoso(
+    request: Request,
+    nome: str = Form(...),
+    idade: int = Form(...),
+    telefone: str = Form(...),
+    db: Session = Depends(get_db)
+):
+    user_id = get_current_user_id(request)
+
+    dados = {
+        "nome": nome,
+        "idade": idade,
+        "telefone": telefone
+    }
+
+    crud.criar_idoso(db, dados, user_id)
+
+    return RedirectResponse("/idosos", status_code=303)
